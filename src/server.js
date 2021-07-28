@@ -2,12 +2,12 @@ const express = require('express')
 const app = express();
 const mysql= require('mysql')
 
-//Remove these secure values before commiting code else move it to secure vault
+//Remove these secure values before committing code else move it to secure vault
 const db = mysql.createConnection({
-    host: "",
-    user: "",
-    password: "", 
-    database: "workplace-schema",
+    host: process.env.MYSQL_HOST,
+    user: process.env.MYSQL_USER,
+    password: process.env.MYSQL_PASSWORD, 
+    database: process.env.MYSQL_DB,
     port: 3306
 });
 
@@ -50,6 +50,7 @@ app.get("/api/get-assets",(req,res) => {
     });
 });
 
+//get list of employees
 app.get("/api/get-employees",(req,res) => {
     const sqlGetEmployees = "SELECT * from employees";
     db.query(sqlGetEmployees, (err,result) => {
@@ -68,11 +69,13 @@ app.post("/api/add-booking",(req,res) => {
             if (err) {
                 console.log(err);
             } else {
-                res.send("Values Inserted");
+                res.send("Booking Made");
             }
         }
     );
 });
+
+
 
 app.listen(3001,() =>{
     console.log("--Workplace API Server--")
