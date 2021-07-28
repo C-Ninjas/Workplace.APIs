@@ -1,6 +1,10 @@
 const express = require('express')
 const app = express();
-const mysql= require('mysql')
+const mysql= require('mysql');
+const cors = require("cors");
+
+app.use(cors());
+app.use(express.json());
 
 //Remove these secure values before committing code else move it to secure vault
 const db = mysql.createConnection({
@@ -16,7 +20,7 @@ app.get("/api/get-bookings-by-employee",(req,res) => {
     const email = req.query.email; 
     
     const sqlGetBookingsByEmail = "SELECT * from bookings where bookedBy = ? or bookedFor = ? order by date";
-    console.log(email);
+    
     db.query(sqlGetBookingsByEmail,[email,email], (err,result) => {
         if (err) {
             console.log(err);
@@ -63,19 +67,18 @@ app.get("/api/get-employees",(req,res) => {
 });
 
 app.post("/api/add-booking",(req,res) => {
-    const sqlCreateBooking = "Insert into bookings(resId,date,bookedBy,bookedFor) Values (?,?,?,?)";
-    db.query(sqlCreateBooking, [resId,date,bookedBy,bookedFor]  ,  
+    const sqlCreateBooking = "Insert into bookings (resId,date,bookedBy,bookedFor) Values ("+req.body.resId+",'"+req.body.date+"','"+req.body.bookedBy+"','"+req.body.bookedFor+"')";
+    db.query(
+        sqlCreateBooking,
         (err, result) => {
             if (err) {
                 console.log(err);
             } else {
-                res.send("Booking Made");
+                res.send("Booking Made for Date "+ req.body.date);
             }
         }
     );
 });
-
-
 
 app.listen(3001,() =>{
     console.log("--Workplace API Server--")

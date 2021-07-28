@@ -6,7 +6,7 @@ CREATE TABLE `workplace-schema`.`assets` (
   `name` VARCHAR(50) NOT NULL,
   `type` VARCHAR(45) NOT NULL,
   `isbookable` BIT NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`));
+PRIMARY KEY (`id`));
 
 
 INSERT INTO `workplace-schema`.`assets` (
